@@ -1,0 +1,164 @@
+package ui
+
+templ Layout(yield templ.Component) {
+<!doctype html>
+<html class="h-full bg-white">
+
+<head>
+  <title>TODO</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/static/style.css" />
+  <script src="https:///unpkg.com/alpinejs" defer></script>
+  <link rel="icon" href="/favicon.svg" />
+</head>
+
+<body class="h-full">
+  <!--
+  This example requires updating your template:
+
+  ```
+  <html class="h-full bg-white">
+  <body class="h-full">
+  ```
+-->
+  <div x-data="{ open: false }">
+    <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
+    <div x-show="open" class="relative z-50 lg:hidden" role="dialog" aria-modal="true">
+      <!--
+      Off-canvas menu backdrop, show/hide based on off-canvas menu state.
+
+      Entering: "transition-opacity ease-linear duration-300"
+        From: "opacity-0"
+        To: "opacity-100"
+      Leaving: "transition-opacity ease-linear duration-300"
+        From: "opacity-100"
+        To: "opacity-0"
+    -->
+      <div class="fixed inset-0 bg-gray-900/80"></div>
+
+      <div class="fixed inset-0 flex">
+        <!--
+        Off-canvas menu, show/hide based on off-canvas menu state.
+
+        Entering: "transition ease-in-out duration-300 transform"
+          From: "-translate-x-full"
+          To: "translate-x-0"
+        Leaving: "transition ease-in-out duration-300 transform"
+          From: "translate-x-0"
+          To: "-translate-x-full"
+      -->
+        <div class="relative mr-16 flex w-full max-w-xs flex-1">
+          <!--
+          Close button, show/hide based on off-canvas menu state.
+
+          Entering: "ease-in-out duration-300"
+            From: "opacity-0"
+            To: "opacity-100"
+          Leaving: "ease-in-out duration-300"
+            From: "opacity-100"
+            To: "opacity-0"
+        -->
+          <div x-show="open" class="absolute left-full top-0 flex w-16 justify-center pt-5">
+            <button type="button" class="-m-2.5 p-2.5" @click="open = false">
+              <span class="sr-only">Close sidebar</span>
+              <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <div x-show="open"
+            class="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-2 ring-1 ring-white/10">
+            <div class="flex items-center gap-x-4">
+              <div class="flex h-16 shrink-0 items-center">
+                <img class="h-8 w-auto" src="/static/logo.svg" alt="TODO" />
+              </div>
+              <span class="text-sm font-semibold leading-6 text-white">TODO</span>
+            </div>
+            <nav class="flex flex-1 flex-col">
+              <ul role="list" class="-mx-2 flex-1 space-y-1">
+                <li>
+                  <!-- Current: "bg-gray-800 text-white", Default: "text-gray-400 hover:text-white hover:bg-gray-800" -->
+                  <a href="/"
+                    class="bg-gray-800 text-white group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                    <svg class="h-6 w-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                      <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                      <g id="SVGRepo_iconCarrier">
+                        <path
+                          d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12M21 12C21 7.02944 16.9706 3 12 3M21 12H19M3 12C3 7.02944 7.02944 3 12 3M3 12H5M12 3V5M13.3229 10.5C12.9703 10.1888 12.5072 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14C13.1046 14 14 13.1046 14 12C14 11.4027 13.7381 10.8665 13.3229 10.5ZM13.3229 10.5L15.8229 8"
+                          stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></path>
+                      </g>
+                    </svg>
+                    Dashboard
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Static sidebar for desktop -->
+    <div
+      class="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-20 lg:overflow-y-auto lg:bg-gray-900 lg:pb-4">
+      <div class="flex h-16 shrink-0 items-center justify-center">
+        <img class="h-8 w-auto" src="/static/logo.svg" alt="TODO" />
+      </div>
+      <nav class="mt-8">
+        <ul role="list" class="flex flex-col items-center space-y-1">
+          <li>
+            <!-- Current: "bg-gray-800 text-white", Default: "text-gray-400 hover:text-white hover:bg-gray-800" -->
+            <a href="/"
+              class="bg-gray-800 text-white group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold">
+              <svg class="h-6 w-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12M21 12C21 7.02944 16.9706 3 12 3M21 12H19M3 12C3 7.02944 7.02944 3 12 3M3 12H5M12 3V5M13.3229 10.5C12.9703 10.1888 12.5072 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14C13.1046 14 14 13.1046 14 12C14 11.4027 13.7381 10.8665 13.3229 10.5ZM13.3229 10.5L15.8229 8"
+                    stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></path>
+                </g>
+              </svg>
+              <span class="sr-only">Dashboard</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="sticky top-0 z-40 flex items-center gap-x-6 bg-gray-900 px-4 py-4 shadow-sm sm:px-6 lg:hidden">
+      <div class="flex-1 flex items-center gap-x-4 text-sm font-semibold leading-6 text-white">
+        <div class="flex shrink-0 items-center justify-center">
+          <img class="h-8 w-auto" src="/static/logo.svg" alt="TODO" />
+        </div>
+        <span>TODO</span>
+      </div>
+      <button type="button" class="-m-2.5 p-2.5 text-gray-400 lg:hidden" @click="open = !open">
+        <span class="sr-only">Open sidebar</span>
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+          aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+      </button>
+    </div>
+
+    <main class="lg:pl-20">
+      <div class="xl:pl-96">
+        <div class="px-4 py-10 sm:px-6 lg:px-8 lg:py-6">
+          {! yield }
+        </div>
+      </div>
+    </main>
+  </div>
+
+
+</body>
+
+</html>
+}
