@@ -1,12 +1,11 @@
 package web
 
 import (
-	"SoftKiwiGames/go-web-template/accounts"
-	"SoftKiwiGames/go-web-template/ui"
 	"context"
 	"log"
 	"net/http"
 	"os/signal"
+	"qbart/pgvector/ui"
 	"syscall"
 
 	"github.com/go-chi/chi/v5"
@@ -20,11 +19,6 @@ type Server struct {
 
 func (s *Server) Run(args []string) int {
 	r := chi.NewRouter()
-
-	accountsMock := &MockAccount{}
-	accountsPlugin := &accounts.Plugin{
-		Profile: accountsMock,
-	}
 
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
@@ -50,7 +44,6 @@ func (s *Server) Run(args []string) int {
 		w.Header().Set("Content-Type", "text/html")
 		s.render.HTML(w, r, ui.Dashboard())
 	})
-	r.Route("/account", accountsPlugin.Router())
 
 	server := &http.Server{Addr: ":3000", Handler: r}
 	notifyCtx, stop := signal.NotifyContext(context.Background(), syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)

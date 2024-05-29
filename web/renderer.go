@@ -1,8 +1,8 @@
 package web
 
 import (
-	"SoftKiwiGames/go-web-template/ui"
 	"net/http"
+	"qbart/pgvector/ui"
 
 	"github.com/a-h/templ"
 )

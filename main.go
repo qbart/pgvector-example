@@ -1,8 +1,8 @@
 package main
 
 import (
-	"SoftKiwiGames/go-web-template/web"
 	"os"
+	"qbart/pgvector/web"
 
 	_ "embed"
 )
