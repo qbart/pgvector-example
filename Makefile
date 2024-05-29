@@ -1,6 +1,4 @@
 .PHONY: dev
-
-.PHONY: dev
 dev:
 	air
 
