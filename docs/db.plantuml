@@ -1,0 +1,17 @@
+@startuml
+object documents {
+  id : ID
+  title : string
+  status : string
+  metadata : jsonb
+}
+object document_chunks {
+  document_id : FK
+  chunk_index : int
+  chunks : int
+  content : vector[]
+  metadata : jsonb
+}
+
+documents "1" -- "*" document_chunks
+@enduml
