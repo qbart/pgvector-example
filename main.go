@@ -54,7 +54,12 @@ func main() {
 		panic(err)
 	}
 
-	documentsHandler := &documents.HttpHandler{DB: db}
+	openAI, err := documents.NewOpenAI(os.Getenv("OPENAI_API_KEY"))
+	if err != nil {
+		slog.Error("openai init failed", "message", err.Error())
+		panic(err)
+	}
+	documentsHandler := &documents.HttpHandler{DB: db, OpenAI: openAI}
 
 	r := chi.NewRouter()
 	renderer := &web.Renderer{}

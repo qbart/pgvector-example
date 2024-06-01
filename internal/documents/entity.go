@@ -1,21 +1,25 @@
 package documents
 
-import "time"
+import (
+	"time"
+
+	"github.com/pgvector/pgvector-go"
+)
 
 type Document struct {
-	ID        uint64 `bun:",autoincrement,identity"`
+	ID        int64 `bun:",autoincrement,identity"`
 	Title     string
 	Metadata  map[string]any `bun:"type:jsonb"`
 	CreatedAt time.Time
 }
 
 type DocumentChunk struct {
-	DocumentID uint64
-	Chunk      uint64
-	Chunks     uint64
+	DocumentID int64
+	Chunk      int64
+	Chunks     int64
 	Content    string
-	Embedding  []float32
-	Metadata   map[string]any `bun:"type:jsonb"`
+	Embedding  pgvector.Vector `bun:"type:vector(1536)"`
+	Metadata   map[string]any  `bun:"type:jsonb"`
 	Status     string
 	UpdatedAt  time.Time
 	CreatedAt  time.Time
