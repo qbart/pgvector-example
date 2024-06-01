@@ -88,6 +88,7 @@ func main() {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		renderer.HTML(w, r, ui.Dashboard())
 	})
+	r.Get("/documents", documentsHandler.SearchDocument)
 	r.Post("/documents", documentsHandler.UploadDocument)
 
 	server := &http.Server{Addr: ":3000", Handler: r}

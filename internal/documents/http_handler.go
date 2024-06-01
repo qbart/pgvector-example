@@ -24,6 +24,45 @@ type HttpHandler struct {
 	*OpenAI
 }
 
+type SearchResponse struct {
+	DocumentID int64   `json:"document_id"`
+	Chunk      int64   `json:"chunk"`
+	Page       int64   `json:"page"`
+	Distance   float32 `json:"distance"`
+}
+
+func (h *HttpHandler) SearchDocument(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query().Get("q")
+	if query == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("missing query parameter"))
+		return
+	}
+
+	embedded, err := h.OpenAI.CreateEmbedding(r.Context(), query)
+	if err != nil {
+		slog.Error("Error creating embedding", "message", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	var chunks []SearchResponse
+	err = h.DB.NewSelect().Model((*DocumentChunk)(nil)).
+		ColumnExpr("document_id, chunk, (metadata->>'page')::bigint as page").
+		ColumnExpr("embedding <-> ? AS distance", pgvector.NewVector(embedded)).
+		Limit(10).
+		OrderExpr("distance").
+		Scan(r.Context(), &chunks)
+	if err != nil {
+		slog.Error("Error searching documents", "message", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(chunks)
+}
+
 func (h *HttpHandler) UploadDocument(w http.ResponseWriter, r *http.Request) {
 	r.ParseMultipartForm(DocumentUploadLimit)
 	form := r.MultipartForm
