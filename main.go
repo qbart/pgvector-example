@@ -9,7 +9,6 @@ import (
 	"os"
 	"os/signal"
 	"qbart/pgvector/internal/documents"
-	"qbart/pgvector/ui"
 	"qbart/pgvector/web"
 	"syscall"
 
@@ -54,16 +53,20 @@ func main() {
 		panic(err)
 	}
 
+	renderer := &web.Renderer{}
+
 	openAI, err := documents.NewOpenAI(os.Getenv("OPENAI_API_KEY"))
 	if err != nil {
 		slog.Error("openai init failed", "message", err.Error())
 		panic(err)
 	}
-	documentsHandler := &documents.HttpHandler{DB: db, OpenAI: openAI}
+	documentsSvc := documents.NewService(db, openAI)
+	documentsHandler := &documents.HttpHandler{
+		Documents: documentsSvc,
+		Renderer:  renderer,
+	}
 
 	r := chi.NewRouter()
-	renderer := &web.Renderer{}
-
 	// NOTE: this demo application is not production-ready,
 	// in order to keept it simple, security features are omitted.
 	r.Use(middleware.RequestID)
@@ -86,10 +89,10 @@ func main() {
 		w.Write(logo)
 	})
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		renderer.HTML(w, r, ui.Dashboard())
+		http.Redirect(w, r, "/documents", http.StatusFound)
 	})
-	r.Get("/documents", documentsHandler.SearchDocument)
-	r.Post("/documents", documentsHandler.UploadDocument)
+	r.Get("/documents", documentsHandler.DocumentsIndex)
+	r.Post("/documents", documentsHandler.DocumentsCreate)
 
 	server := &http.Server{Addr: ":3000", Handler: r}
 	notifyCtx, stop := signal.NotifyContext(context.Background(), syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
